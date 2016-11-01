@@ -60,13 +60,17 @@ cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_BUILD_TYPE=Release -DWITH_${
 (make 2>&1 >>$PREFIX/install.log  || exit 1) && (make install 2>&1 >>$PREFIX/install.log || exit 1)
 cd ..
 
-# Check for a CUDA install (using nvcc instead of nvidia-smi for cross-platform compatibility)
-path_to_nvcc=$(which nvcc)
-if [ $? == 1 ]; then { # look for it in /usr/local
-  if [[ -f /usr/local/cuda/bin/nvcc ]]; then {
-    path_to_nvcc=/usr/local/cuda/bin/nvcc
-  } fi
-} fi
+if [[ "$TORCH_NO_CUDA" == "1" ]]; then
+    echo "CUDA support disabled"
+else
+    # Check for a CUDA install (using nvcc instead of nvidia-smi for cross-platform compatibility)
+    path_to_nvcc=$(which nvcc)
+    if [ $? == 1 ]; then { # look for it in /usr/local
+        if [[ -f /usr/local/cuda/bin/nvcc ]]; then {
+            path_to_nvcc=/usr/local/cuda/bin/nvcc
+        } fi
+    } fi
+fi
 
 # check if we are on mac and fix RPATH for local install
 path_to_install_name_tool=$(which install_name_tool 2>/dev/null)
