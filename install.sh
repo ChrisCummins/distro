@@ -207,6 +207,10 @@ else
     fi
 fi
 
+if [[ "$TORCH_NO_RC" == 1 ]]; then
+    WRITE_PATH_TO_PROFILE=0
+fi
+
 if [[ $WRITE_PATH_TO_PROFILE == 1 ]]; then
     echo "
 
